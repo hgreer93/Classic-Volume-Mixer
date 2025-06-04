@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Runtime.InteropServices;
+using static ClassicVolumeMixer.Helpers.WindowHelper;
 
 namespace ClassicVolumeMixer.Helpers
 {
@@ -28,6 +29,28 @@ namespace ClassicVolumeMixer.Helpers
 
         [DllImport("user32.dll", SetLastError = true)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
+
+        [DllImport("shell32.dll", SetLastError = true)]
+        public static extern IntPtr SHAppBarMessage(uint dwMessage, [In] ref AppBarData pData);
+
+        [StructLayout(LayoutKind.Sequential)]
+        public struct AppBarData
+        {
+            public uint cbSize;
+            public IntPtr hWnd;
+            public uint uCallbackMessage;
+            public AppBarEdge uEdge;
+            public Rect rect;
+            public int lParam;
+        }
+
+        public enum AppBarEdge : uint
+        {
+            Left = 0,
+            Top = 1,
+            Right = 2,
+            Bottom = 3
+        }
 
         public delegate bool EnumedWindow(IntPtr handleWindow, ArrayList handles);
 
