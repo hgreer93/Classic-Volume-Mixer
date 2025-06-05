@@ -412,7 +412,23 @@ namespace ClassicVolumeMixer
                 appCount = (windowHandles.Count - 12) / 7;
             }
             WindowHelper.GetWindowRect(handle, ref corners);
-            WindowHelper.MoveWindow(handle, screenArea.Width - (160 + 110 * appCount), screenArea.Height - (corners.Bottom - corners.Top), 160 + 110 * appCount, 350, true);
+            WindowHelper.AppBarData taskbarData = new WindowHelper.AppBarData();
+            WindowHelper.SHAppBarMessage(5, ref taskbarData);
+
+            switch (taskbarData.uEdge)
+            {
+                case WindowHelper.AppBarEdge.Left:
+                    WindowHelper.MoveWindow(handle, taskbarData.rect.Right, screenArea.Height - (corners.Bottom - corners.Top), 160 + 110 * appCount, 350, true);
+                    break;
+                case WindowHelper.AppBarEdge.Top:
+                    WindowHelper.MoveWindow(handle, screenArea.Width - (160 + 110 * appCount), taskbarData.rect.Bottom + 7, 160 + 110 * appCount, 350, true);
+                    break;
+                default:
+                    WindowHelper.MoveWindow(handle, screenArea.Width - (160 + 110 * appCount), screenArea.Height - (corners.Bottom - corners.Top), 160 + 110 * appCount, 350, true);
+                    break;
+            }
+            WindowHelper.GetWindowRect(handle, ref corners);
+            Console.WriteLine(corners.Left + " " + corners.Right + " " + (160 + 110 * appCount));
         }
     }
 }
